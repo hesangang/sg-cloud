@@ -1,1 +1,13 @@
 
+server:
+  port: 8800
+spring:
+  application:
+    name: cloud-oauth2-authorization-server
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO

@@ -1,1 +1,19 @@
+server:
+  port: 8801
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  application:
+    name: cloud-oauth2-resource-server
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8800
 
