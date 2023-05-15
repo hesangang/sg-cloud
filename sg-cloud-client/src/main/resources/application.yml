@@ -42,7 +42,7 @@ spring:
             client-name: messaging-client-client-credentials
         provider:
           spring:
-            issuer-uri: http://localhost:8800
+            issuer-uri: http://127.0.0.1:8800
 
 messages:
   base-uri: http://127.0.0.1:8801/messages
