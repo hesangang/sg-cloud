@@ -15,5 +15,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8800
+          issuer-uri: http://localhost:8800
 

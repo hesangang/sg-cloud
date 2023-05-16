@@ -1,7 +1,7 @@
 package com.sangang.authorization.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.Customizer;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -12,25 +12,33 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // @formatter:off
     @Bean
-    public SecurityFilterChain standardSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                .anyRequest()
-                .authenticated())
-                .formLogin(Customizer.withDefaults());
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().authenticated()
+                )
+                .formLogin(withDefaults());
         return http.build();
     }
+    // @formatter:on
 
+    // @formatter:off
     @Bean
     UserDetailsService users() {
-        UserDetails userDetails = User.withUsername("user")
-                .password("{bcrypt}$2a$10$9uIg5tH8gvyk1Uet8h.Jp.i5i16OTxMhbjb4nbQIQUH.D3m2L2Way")
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("111111")
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(userDetails);
+        return new InMemoryUserDetailsManager(user);
     }
+    // @formatter:on
 }
 

@@ -1,5 +1,6 @@
 package com.sangang.client.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -10,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction.clientRegistrationId;
 import static org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient;
@@ -29,14 +28,14 @@ public class AuthorizationController {
     @GetMapping(value = "/authorize", params = "grant_type=authorization_code")
     public String authorizationCodeGrant(Model model, @RegisteredOAuth2AuthorizedClient("messaging-client-authorization-code") OAuth2AuthorizedClient authorizedClient) {
 
-        String[] messages = this.webClient
+        String messages = this.webClient
                 .get()
                 .uri(this.messagesBaseUri)
                 .attributes(oauth2AuthorizedClient(authorizedClient))
                 .retrieve()
-                .bodyToMono(String[].class)
+                .bodyToMono(String.class)
                 .block();
-        model.addAttribute("messages", messages);
+        model.addAttribute("messages", messages+"grant_type=authorization_code");
 
         return "index";
     }
@@ -58,14 +57,14 @@ public class AuthorizationController {
     @GetMapping(value = "/authorize", params = "grant_type=client_credentials")
     public String clientCredentialsGrant(Model model) {
 
-        String[] messages = this.webClient
+        String messages = this.webClient
                 .get()
                 .uri(this.messagesBaseUri)
                 .attributes(clientRegistrationId("messaging-client-client-credentials"))
                 .retrieve()
-                .bodyToMono(String[].class)
+                .bodyToMono(String.class)
                 .block();
-        model.addAttribute("messages", messages);
+        model.addAttribute("messages", messages+"grant_type=client_credentials");
 
         return "index";
     }
