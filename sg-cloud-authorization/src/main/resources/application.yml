@@ -3,7 +3,18 @@ server:
   port: 8800
 spring:
   application:
-    name: cloud-oauth2-authorization-server
+    name: authorization-server
+  main:
+    allow-circular-references: true
+  thymeleaf:
+    cache: false
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/sg-sso?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
 
 logging:
   level:
@@ -11,3 +22,57 @@ logging:
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.springframework.security.oauth2: INFO
+
+---
+#dev
+spring:
+  mybatis:
+    mapper-locations: com.sangang.authorization.web.mapper
+    type-aliases-package: com.sangang.authorization.web.mapper
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        namespace: public
+        service: ${spring.application.name}
+        username: nacos
+        password: nacos
+      config:
+        enabled: true
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        prefix: ${spring.application.name}
+        namespace: public
+        username: nacos
+        password: nacos
+  config:
+    activate:
+      on-profile: dev
+
+---
+#uat
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        namespace: uat
+        service: ${spring.application.name}
+        username: nacos
+        password: nacos
+      config:
+        enabled: true
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        prefix: ${spring.application.name}
+        namespace: uat
+        username: nacos
+        password: nacos
+  config:
+    activate:
+      on-profile: uat
+

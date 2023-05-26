@@ -8,6 +8,8 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import com.sangang.authorization.jose.Jwks;
+import com.sangang.authorization.web.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -44,6 +46,12 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
 
+    /**
+     * 自定义UserDetailsService
+     */
+    @Autowired
+    private UserService userService;
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -52,7 +60,7 @@ public class AuthorizationServerConfig {
                 .oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
 
         // @formatter:off
-        http
+        http.userDetailsService(userService)
                 .exceptionHandling(exceptions ->
                         exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
                 )
@@ -116,18 +124,18 @@ public class AuthorizationServerConfig {
         return AuthorizationServerSettings.builder().build();
     }
 
-    @Bean
+    /*@Bean
     public EmbeddedDatabase embeddedDatabase() {
         // @formatter:off
         return new EmbeddedDatabaseBuilder()
                 .generateUniqueName(true)
-                .setType(EmbeddedDatabaseType.H2)
+                .setType(EmbeddedDatabaseType.HSQL)
                 .setScriptEncoding("UTF-8")
                 .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
                 .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
                 .addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
                 .build();
         // @formatter:on
-    }
+    }*/
 
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="TRACE">
+	<properties>
+		<!-- 日志路径和日志文件 -->
+		<Property name="LOG_PATH">./logs/mq</Property>
+		<property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss,SSS} | %level | %thread | %logger{1.} - %X{requestId} -> %msg%n</property>
+	</properties>
+	<appenders>
+		<console name="Console" target="SYSTEM_OUT">
+			<PatternLayout charset="UTF-8" pattern="${PATTERN}" />
+			<ThresholdFilter level="ALL" onMatch="ACCEPT"
+				onMismatch="DENY" />
+		</console>
+		<RollingRandomAccessFile bufferSize="524288"
+			name="ROLLING_FILE" filePattern="${LOG_PATH}-%d{yyyyMMdd}-%i.log"
+			fileName="${LOG_PATH}.log" immediateFlush="false">
+			<PatternLayout pattern="${PATTERN}" />
+			<Policies>
+				<!-- 按天切割 -->
+				<TimeBasedTriggeringPolicy modulate="true"
+					interval="1" />
+				<!-- 一个日志文件的最大大小 -->
+				<SizeBasedTriggeringPolicy size="1 GB" />
+			</Policies>
+			<!-- 文件夹下最多的文件个数 -->
+			<DefaultRolloverStrategy max="5" />
+		</RollingRandomAccessFile>
+	</appenders>
+	<loggers>
+		<AsyncLogger name="com.sg.mq" level="DEBUG" additivity="false">
+			<AppenderRef ref="ROLLING_FILE" />
+			<AppenderRef ref="Console" />
+		</AsyncLogger>
+		<AsyncRoot level="INFO">
+			<AppenderRef ref="ROLLING_FILE" />
+			<AppenderRef ref="Console" />
+		</AsyncRoot>
+
+	</loggers>
+</configuration>

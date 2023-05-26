@@ -18,4 +18,7 @@ The following was discovered as part of building this project:
 
 * [idea config jdk8/17](https://blog.csdn.net/weixin_43847283/article/details/129977741)
 
+* [spring-cloud-alibaba](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E)
+
+
 
