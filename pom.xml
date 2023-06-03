@@ -15,10 +15,19 @@
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
 
+    <!--<repositories>
+        <repository>
+            <id>AsposeJavaAPI</id>
+            <name>Aspose Java API</name>
+            <url>https://repository.aspose.com/repo/</url>
+        </repository>
+    </repositories>-->
+
     <modules>
         <module>sg-cloud-authorization</module>
         <!--<module>sg-cloud-resource</module>
         <module>sg-cloud-client</module>-->
+        <module>sg-cloud-temp</module>
         <module>sg-cloud-common-base</module>
         <module>sg-cloud-feign-common</module>
     </modules>
