@@ -22,15 +22,15 @@ public class Test3 {
             FileInputStream is = new FileInputStream("D:/test/test.docx");
             XWPFDocument doc = new XWPFDocument(is);
 
-            Map<String,String> dataMap = new HashMap<>();
+            Map<String,Object> dataMap = new HashMap<>();
             dataMap.put("name","大白\n小白");
             dataMap.put("age","18");
             dataMap.put("url","朝阳合生汇");
 
             Map<String, InputStream> imgMap = new HashMap<>();
-            imgMap.put("img",new FileInputStream("D:/test/test.png"));
+            dataMap.put("img",new FileInputStream("D:/test/test.png"));
 
-            DocUtil.refreshBooks(doc,dataMap,imgMap);
+            DocUtil.replaceBookTag(doc,dataMap);
 
             doc.write(new FileOutputStream("d:/test/temp/03.docx"));
         }catch (Exception e){

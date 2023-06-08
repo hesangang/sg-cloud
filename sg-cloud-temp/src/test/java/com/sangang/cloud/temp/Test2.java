@@ -25,9 +25,9 @@ public class Test2 {
         String exportUrl = uploadPath + expotr;
 
         Map<String, String> map = new HashMap<>();
-        map.put("sangang-name","张三\n与李四");
-        map.put("sangang-age","25");
-        map.put("sangang-url","ss");
+        map.put("name","王五\n与赵六");
+        map.put("age","25");
+        map.put("url","ss");
 
         //获取当前系统支持的换行符
         String line = System.getProperty("line.separator");
@@ -75,7 +75,7 @@ public class Test2 {
                             createParagraphs(xwpfParagraph, paragraphs,document);
                             return false;
                         }
-                        xwpfRunText = xwpfRunText.replace(entry.getKey(), entry.getValue());
+                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
                         System.out.println(xwpfRunText);
                     }
                 }

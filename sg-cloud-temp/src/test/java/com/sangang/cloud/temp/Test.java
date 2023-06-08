@@ -23,9 +23,9 @@ public class Test {
         String exportUrl = uploadPath + expotr;
 
         Map<String, String> map = new HashMap<>();
-        map.put("{{name}}","张三\n与李四");
-        map.put("{{age}}","25");
-        map.put("{{url}}","ss");
+        map.put("name","张三\n与李四");
+        map.put("age","25");
+        map.put("url","ss");
 
         //获取当前系统支持的换行符
         String line = System.getProperty("line.separator");
