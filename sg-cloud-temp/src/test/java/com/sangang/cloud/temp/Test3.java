@@ -18,6 +18,7 @@ public class Test3 {
     }
 
     public static void rdi(){
+
         try {
             FileInputStream is = new FileInputStream("D:/test/test.docx");
             XWPFDocument doc = new XWPFDocument(is);

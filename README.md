@@ -24,6 +24,15 @@ The following was discovered as part of building this project:
 
 * [office模版填充](https://blog.csdn.net/yangbaggio/article/details/106436341)
 * [office模版填充换行](https://www.codenong.com/14830667/)
+* [office在线编辑](https://blog.csdn.net/qq_38238956/article/details/128411391)
+
+- 管理端页面 /browser/dist/admin/admin.html
+
+- 打开文档页面 /browser/dist/framed.doc.html
+  
+
+
+  
 
 
 

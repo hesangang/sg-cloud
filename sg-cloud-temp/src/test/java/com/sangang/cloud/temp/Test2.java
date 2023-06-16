@@ -1,10 +1,7 @@
 package com.sangang.cloud.temp;
 
 import org.apache.poi.ooxml.POIXMLDocument;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 
 import java.io.FileOutputStream;
@@ -79,6 +76,9 @@ public class Test2 {
                         System.out.println(xwpfRunText);
                     }
                 }
+                //xwpfRun.setFontSize(12);//字号
+                //xwpfRun.setFontFamily("仿宋_GB2312");//字样
+                xwpfRun.setUnderline(UnderlinePatterns.SINGLE);//下划线（类型比较多大家自己尝试）
                 xwpfRun.setText(xwpfRunText, 0);
             }
         }
@@ -103,9 +103,6 @@ public class Test2 {
                 newParagraph.setNumID(numID);
                 newParagraph.getCTP().insertNewR(0).insertNewT(0).setStringValue(paragraphs[i]);
 
-                List<XWPFRun> runs = xwpfParagraph.getRuns();
-                List<XWPFRun> runs1 = newParagraph.getRuns();
-                System.out.println("");
             }
             document.removeBodyElement(document.getPosOfParagraph(xwpfParagraph));
         }

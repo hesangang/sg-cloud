@@ -2,9 +2,7 @@ package com.sangang.cloud.temp.util;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
@@ -13,6 +11,7 @@ import org.w3c.dom.Node;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -131,22 +130,6 @@ public class DocUtil {
     }
 
 
-    private static void createParagraphs(XWPFParagraph xwpfParagraph, String[] paragraphs,XWPFDocument document) {
-        if(xwpfParagraph!=null){
-            for (int i = 0; i < paragraphs.length; i++) {
-                XmlCursor cursor = xwpfParagraph.getCTP().newCursor();
-                XWPFParagraph newParagraph = document.insertNewParagraph(cursor);
-                newParagraph.setAlignment(xwpfParagraph.getAlignment());
-                newParagraph.getCTP().insertNewR(0).insertNewT(0).setStringValue(paragraphs[i]);
-                newParagraph.setNumID(xwpfParagraph.getNumID());
-                List<XWPFRun> runs = xwpfParagraph.getRuns();
-                List<XWPFRun> runs1 = newParagraph.getRuns();
-                System.out.println("");
-            }
-            document.removeBodyElement(document.getPosOfParagraph(xwpfParagraph));
-        }
-    }
-
     /**
      * 替换书签
      *
@@ -193,6 +176,64 @@ public class DocUtil {
         }
     }
 
+
+    protected static void replaceElementInParagraphs(List<XWPFParagraph> xwpfParagraphs,
+                                                     Map<String, String> replacedMap,XWPFDocument document) {
+        if (!searchInParagraphs(xwpfParagraphs, replacedMap,document)) {
+            replaceElementInParagraphs(xwpfParagraphs, replacedMap,document);
+        }
+    }
+
+    private static boolean searchInParagraphs(List<XWPFParagraph> xwpfParagraphs, Map<String, String> replacedMap,XWPFDocument document) {
+        for(XWPFParagraph xwpfParagraph : xwpfParagraphs) {
+            List<XWPFRun> xwpfRuns = xwpfParagraph.getRuns();
+            for(XWPFRun xwpfRun : xwpfRuns) {
+                String xwpfRunText = xwpfRun.getText(xwpfRun.getTextPosition());
+                for(Map.Entry<String, String> entry : replacedMap.entrySet()) {
+                    if (xwpfRunText != null && xwpfRunText.contains(entry.getKey())) {
+                        if (entry.getValue().contains("\n")) {
+                            xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
+                            String[] paragraphs = xwpfRunText.split("\n");
+                            entry.setValue("");
+                            createParagraphs(xwpfParagraph, paragraphs,document);
+                            return false;
+                        }
+                        xwpfRunText = xwpfRunText.replaceAll(entry.getKey(), entry.getValue());
+                        System.out.println(xwpfRunText);
+                    }
+                }
+                //xwpfRun.setFontSize(12);//字号
+                //xwpfRun.setFontFamily("仿宋_GB2312");//字样
+                xwpfRun.setUnderline(UnderlinePatterns.SINGLE);//下划线（类型比较多大家自己尝试）
+                xwpfRun.setText(xwpfRunText, 0);
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param xwpfParagraph
+     * @param paragraphs
+     * @param document
+     */
+    private static void createParagraphs(XWPFParagraph xwpfParagraph, String[] paragraphs,XWPFDocument document) {
+        if(xwpfParagraph!=null){
+            for (int i = 0; i < paragraphs.length; i++) {
+                XmlCursor cursor = xwpfParagraph.getCTP().newCursor();
+                XWPFParagraph newParagraph = document.insertNewParagraph(cursor);
+
+                ParagraphAlignment alignment = xwpfParagraph.getAlignment();
+                BigInteger numID = xwpfParagraph.getNumID();
+                newParagraph.setAlignment(alignment);
+                newParagraph.setNumID(numID);
+                newParagraph.getCTP().insertNewR(0).insertNewT(0).setStringValue(paragraphs[i]);
+
+            }
+            document.removeBodyElement(document.getPosOfParagraph(xwpfParagraph));
+        }
+    }
+
     private static void setText(XWPFRun run,String text){
         if (text.contains("\n")) {
             String[] lines = text.split("\n");
@@ -200,9 +241,11 @@ public class DocUtil {
             for (int i = 1; i < lines.length; i++) {
                 // add break and insert new text
                 run.addBreak();
-                run.setText(lines[i],0);
+                run.setUnderline(UnderlinePatterns.SINGLE);
+                run.setText(lines[i]);
             }
         } else {
+            run.setUnderline(UnderlinePatterns.SINGLE);
             run.setText(text, 0);
         }
     }
