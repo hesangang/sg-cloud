@@ -26,10 +26,32 @@ The following was discovered as part of building this project:
 * [office模版填充换行](https://www.codenong.com/14830667/)
 * [office在线编辑](https://blog.csdn.net/qq_38238956/article/details/128411391)
 
+
 - 管理端页面 /browser/dist/admin/admin.html
 
 - 打开文档页面 /browser/dist/framed.doc.html
+
+## ssl证书
+
+* [openssl安装教程](https://www.cnblogs.com/dingshaohua/p/12271280.html)
+* [openssl便捷版安装包](http://slproweb.com/products/Win32OpenSSL.html)
   
+
+```shell
+# 生成私钥(Generate a private key) : server.key
+openssl genrsa -des3 -out server.key 2048
+
+# Generate a CSR : server.csr
+openssl req -new -key server.key -out server.csr
+
+# Remove Passphrase from key : server.key.org 、server.crt
+cp server.key server.key.org
+openssl rsa -in server.key.org -out server.key
+
+# 产生自签名证书(Generate self signed certificate): server.crt
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+  
+```
 
 
   
